@@ -1,0 +1,43 @@
+DeepSeek Harness Linux — attribution and trademarks
+===================================================
+
+This repository contains two layers with separate provenance.
+
+1. Upstream software — DeepSeek Harness
+---------------------------------------
+
+Everything outside the `linux/` directory is upstream code from
+https://github.com/deepseek-ai/deepseek-harness, pinned at tag `dsh-v0.2.2-rc.3`.
+
+Copyright (c) Hangzhou DeepSeek Artificial Intelligence Co., Ltd. and contributors.
+Licensed under the MIT License. The upstream `LICENSE` file is kept verbatim at the repository
+root and applies to that code.
+
+2. Community Linux layer — this project
+---------------------------------------
+
+The `linux/` directory, the workflow at `.github/workflows/linux-deb.yml`, and the banner added
+to the top of `README.md` are additions made by this project's maintainers.
+
+Copyright (c) 2026 rephaelTAS. Licensed under the MIT License, reproduced verbatim in the root
+`LICENSE` file.
+
+Trademarks and distribution identity
+------------------------------------
+
+The MIT License grants rights to the software, not to names, logos, or infrastructure.
+
+- "DeepSeek" and "DeepSeek Harness" are trademarks of their respective owner. This project is an
+  unofficial community build. It must not be presented as an official DeepSeek release.
+- The upstream application uses the identifier `com.deepseek.dsh` and the update feed
+  `harness.deepseek.com`. A community build must not reuse either: an official app ID would make
+  the package indistinguishable from a release build, and the official update feed would deliver
+  Windows and macOS updates to a Linux installation.
+- Any redistributed package must state that it is unofficial in its package description, its
+  `.desktop` entry, and its documentation.
+
+Model usage is separate from the application license
+----------------------------------------------------
+
+This application being free and open source does not make model inference free. Running an agent
+session requires a DeepSeek account and API access, which have their own terms and pricing.

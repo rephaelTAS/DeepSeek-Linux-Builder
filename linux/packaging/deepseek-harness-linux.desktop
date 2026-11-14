@@ -1,0 +1,23 @@
+[Desktop Entry]
+Type=Application
+Version=1.5
+Name=DeepSeek Harness
+GenericName=AI coding agent
+Comment=Unofficial community Linux build of DeepSeek Harness
+Comment[pt]=Compilação comunitária não oficial do DeepSeek Harness para Linux
+Exec=deepseek-harness %U
+TryExec=deepseek-harness
+Icon=deepseek-harness
+Terminal=false
+Categories=Development;IDE;
+Keywords=ai;agent;coding;deepseek;harness;
+MimeType=x-scheme-handler/dsh;
+StartupNotify=true
+StartupWMClass=DeepSeek Harness
+X-GNOME-UsesNotifications=true
+X-KDE-StartupNotify=true
+
+[Desktop Action new-session]
+Name=New session
+Name[pt]=Nova sessão
+Exec=deepseek-harness --new-session

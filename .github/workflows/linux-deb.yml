@@ -1,0 +1,98 @@
+name: Linux .deb (community)
+
+# Manual only. The Linux target is not wired into the upstream packaging pipeline yet; this
+# workflow exists so the build is reproducible on a clean Ubuntu 24.04 runner rather than on a
+# developer's machine. It will fail at "Verify Linux target" until the edits documented in
+# linux/docs/installation/build-deb.md section 2 are applied.
+#
+# Nothing here publishes a release: the artifact is uploaded for inspection and hand-testing.
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_version:
+        description: 'Optional version override passed to --build-version'
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: linux-deb-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  package:
+    name: Build x86_64 .deb
+    runs-on: ubuntu-24.04
+    timeout-minutes: 120
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Verify Linux target is wired
+        run: |
+          set -eu
+          grep -q "'linux-x64'" apps/desktop/scripts/package-target.ts || {
+            echo "::error::linux-x64 is missing from package-target.ts. Apply linux/docs/installation/build-deb.md section 2."
+            exit 1
+          }
+          grep -q 'package:linux:x64' apps/desktop/package.json || {
+            echo "::error::package:linux:x64 is missing from apps/desktop/package.json."
+            exit 1
+          }
+          grep -q "'deb'" apps/desktop/scripts/electron-builder-config.mjs || {
+            echo "::error::The deb target is missing from the linux block in electron-builder-config.mjs."
+            exit 1
+          }
+
+      - name: Install packaging tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            dpkg-dev fakeroot libfuse2t64 python3 build-essential
+
+      - name: Set up Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24.9.0'
+
+      - name: Enable pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@latest --activate
+          pnpm --version
+
+      - name: Install workspace dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build artifacts
+        run: pnpm run build
+
+      - name: Package .deb
+        env:
+          INPUT_BUILD_VERSION: ${{ inputs.build_version }}
+        run: |
+          set -eu
+          if [ -n "${INPUT_BUILD_VERSION}" ]; then
+            pnpm --dir apps/desktop run package:linux:x64 -- --build-version "${INPUT_BUILD_VERSION}"
+          else
+            pnpm --dir apps/desktop run package:linux:x64
+          fi
+
+      - name: Inspect package
+        run: |
+          set -eu
+          deb="$(find apps/desktop/.desktop-build/targets/linux-x64 -name '*.deb' -print -quit)"
+          [ -n "$deb" ] || { echo "::error::No .deb produced"; exit 1; }
+          dpkg-deb --info "$deb"
+          dpkg-deb --contents "$deb" | head -n 50
+
+      - name: Upload package
+        uses: actions/upload-artifact@v4
+        with:
+          name: dsh-linux-deb-x64
+          path: apps/desktop/.desktop-build/targets/linux-x64/**/*.deb
+          if-no-files-found: error
+          retention-days: 14
