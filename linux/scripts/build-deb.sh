@@ -42,7 +42,11 @@ step "4/5 Compilar artefactos"
 pnpm run build
 
 step "5/5 Empacotar .deb"
-pnpm --dir apps/desktop run package:linux:x64
+# A community build must not reuse the official identifier (com.deepseek.dsh): the package would
+# be indistinguishable from a release build and would inherit the official update feed.
+export DSH_DESKTOP_APP_ID="${DSH_DESKTOP_APP_ID:-io.github.rephaeltas.dshlinux}"
+printf '  DSH_DESKTOP_APP_ID=%s\n' "$DSH_DESKTOP_APP_ID"
+pnpm --dir apps/desktop run package:linux:x64 --unsigned
 
 artifacts="apps/desktop/.desktop-build/targets/linux-x64"
 deb="$(find "$artifacts" -maxdepth 2 -name '*.deb' -print -quit 2>/dev/null || true)"

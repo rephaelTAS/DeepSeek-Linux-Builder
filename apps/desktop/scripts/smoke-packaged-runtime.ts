@@ -11,12 +11,21 @@ const paths = resolveDesktopTargetBuildPaths()
 const { values } = parseArgs({ options: { unsigned: { type: 'boolean', default: false }, 'skip-notarization': { type: 'boolean', default: false } }, allowPositionals: false })
 const target = resolveDesktopBuildTarget()
 const windows = target === 'win-x64'
+// The Linux target only builds on a Linux host, and the declared build-target type covers the
+// upstream release targets, so the host platform decides here.
+const linux = process.platform === 'linux'
 const artifacts = desktopArtifactOutput(paths, { unsigned: values.unsigned, skipNotarization: values['skip-notarization'] }).directory
 const application = windows ? join(artifacts, 'win-unpacked')
-  : join(artifacts, target === 'mac-arm64' ? 'mac-arm64' : 'mac', 'DeepSeek Harness.app', 'Contents')
-const resources = join(application, windows ? 'resources' : 'Resources')
-const executable = windows ? join(application, 'DeepSeek Harness.exe') : join(application, 'MacOS', 'DeepSeek Harness')
+  : linux ? join(artifacts, 'linux-unpacked')
+    : join(artifacts, target === 'mac-arm64' ? 'mac-arm64' : 'mac', 'DeepSeek Harness.app', 'Contents')
+const resources = join(application, windows || linux ? 'resources' : 'Resources')
+const executable = windows ? join(application, 'DeepSeek Harness.exe')
+  : linux ? join(application, 'deepseek-harness')
+    : join(application, 'MacOS', 'DeepSeek Harness')
 const descriptor = await verifyDesktopRuntime(paths.dsh, readDesktopRuntime(paths.dsh).release.version,
   resolveDesktopPackageTarget(target))
 if (windows && !values.unsigned) await verifyWindowsCode(application)
-await smokePreparedRuntime(join(resources, 'app.asar', 'dsh'), executable, join(resources, 'runtime'), descriptor)
+await smokePreparedRuntime(join(resources, 'app.asar', 'dsh'), executable, join(resources, 'runtime'), descriptor,
+  // Linux packages carry the WASM Office engine; native conversion assertions only hold where
+  // upstream publishes a native LibreOfficeKit engine.
+  { officeConversion: !linux })

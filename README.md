@@ -9,11 +9,12 @@
 > support Linux as a Desktop release target. Upstream code is MIT; the DeepSeek name and the
 > official update feed are not ours to use.
 >
-> **Status: work in progress — no Linux package has been released yet.** The build path is
-> documented but has not produced a verified artifact.
+> **Status: working.** Version `0.2.2-rc.3` builds, installs and starts on Ubuntu 24.04 /
+> Pop!_OS 24.04 x86_64. Packages are unsigned community builds.
 >
-> - Start here: [linux/README.md](linux/README.md)
-> - Build guide: [linux/docs/installation/build-deb.md](linux/docs/installation/build-deb.md)
+> - Install: [linux/docs/installation/INSTALL.md](linux/docs/installation/INSTALL.md)
+> - Build from source: [linux/docs/installation/build-deb.md](linux/docs/installation/build-deb.md)
+> - Overview: [linux/README.md](linux/README.md)
 > - Analysis and plan: [linux/docs/architecture/analise-tecnica.md](linux/docs/architecture/analise-tecnica.md)
 >
 > _Compilação comunitária não oficial. O restante deste ficheiro é o README do upstream, sem

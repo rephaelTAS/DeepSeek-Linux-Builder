@@ -85,13 +85,10 @@ export function resolveDesktopAutoUpdateTarget(platform, arch) {
 
 /**
  * Return the local completion record filename for one packaged target.
- * @param {'mac-arm64' | 'mac-x64' | 'win-x64'} target - Supported release target.
+ * @param {string} target - Packaged target name; Linux builds keep the filename without a feed.
  * @returns {string} Filename stored beside electron-builder artifacts.
  */
 export function desktopBuildRecordFilename(target) {
-  if (!UPDATE_TARGETS.has(target)) {
-    throw new Error(`desktop auto-update: unsupported target ${target}`)
-  }
   return `${target}-release.json`
 }
 

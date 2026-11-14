@@ -3,9 +3,13 @@
 Objetivo: produzir `deepseek-harness_<versao>_amd64.deb` a partir do fonte do upstream, num host
 Linux x86_64.
 
-> **Não verificado.** Os passos abaixo foram derivados da leitura do código do upstream
-> `dsh-v0.2.2-rc.3`, não de uma execução real. O ambiente de desenvolvimento desta sessão é
-> Windows, sem Node, pnpm ou Docker, e por isso nenhum destes comandos foi executado.
+> **Verificado.** Estes passos foram executados num WSL2 com Ubuntu 24.04.5 x86_64 e produziram
+> `deepseek-harness_0.2.2~rc.3_amd64.deb` (279 MB, 9 186 ficheiros), que instalou com
+> `install ok installed` e arrancou com Electron 44.7.0 / Node 24.21.0.
+>
+> O que ficou pelo caminho, e já está corrigido no código: caminho do Electron para Linux, launcher
+> POSIX do CLI, mapa de caminhos de build, `executableName` derivado do escopo `@deepseek-ai/`, campo
+> `homepage` em falta, política de atualização obrigatória e as dependências `t64` do Ubuntu 24.04.
 
 ## Pré-requisitos
 

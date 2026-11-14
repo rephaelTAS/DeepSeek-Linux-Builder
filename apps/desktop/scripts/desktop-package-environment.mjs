@@ -118,6 +118,8 @@ function requireReadableFile(environment, name) {
  * @returns {void}
  */
 export function validateDesktopPackageEnvironment(environment, target, options = {}) {
+  // Linux packaging has no release configuration, signing identity, or update feed to validate.
+  if (target.platform === 'linux') return
   resolveDesktopTargetBuildPaths(environment, target.platform, target.arch)
   resolveDesktopAppId(environment)
   resolveNpmRegistry(environment)

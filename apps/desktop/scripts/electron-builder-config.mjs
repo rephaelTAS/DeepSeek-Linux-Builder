@@ -66,7 +66,10 @@ export function createElectronBuilderConfig(
   if (skipNotarization && (unsigned || resolvedPlatform !== 'darwin')) throw new Error('Skipping notarization requires a signed macOS build')
   const packagesMacOS = targetPlatform === 'darwin' || (targetPlatform === undefined && hostPlatform === 'darwin')
   const packagesWindows = resolvedPlatform === 'win32'
-  const policy = packagesMacOS && unsigned ? undefined : resolveDesktopPolicyEnvironment(env)
+  // A community Linux build has no mandatory-update service, so it carries no policy at all.
+  const policy = resolvedPlatform === 'linux'
+    ? undefined
+    : packagesMacOS && unsigned ? undefined : resolveDesktopPolicyEnvironment(env)
   if (resolvedPlatform === 'win32') installWindowsDirectoryInstaller()
   const macOSSigning = packagesMacOS && !unsigned ? resolveMacOSSigningEnvironment(env) : undefined
   if (packagesMacOS && !unsigned && !skipNotarization) resolveMacOSNotarizationEnvironment(env)
@@ -111,6 +114,10 @@ export function createElectronBuilderConfig(
     protocols: [{ name: 'DeepSeek Harness', schemes: ['dsh'] }],
     extraMetadata: {
       dshDesktopAppId: appId,
+      // Window association: without desktopName the WM_CLASS does not match the .desktop entry,
+      // so a running window gets no icon and no launcher grouping.
+      desktopName: 'deepseek-harness.desktop',
+      homepage: 'https://github.com/rephaelTAS/DeepSeek-Linux-Builder',
       dshDesktopUpdateChannel: update?.channel ?? 'nightly',
       ...(policy === undefined ? {} : { dshMandatoryUpdatePolicy: policy }),
       ...buildVersion === productVersion ? {} : { version: buildVersion },
@@ -255,8 +262,42 @@ export function createElectronBuilderConfig(
       target: ['nsis'],
     },
     linux: {
+      icon: fileURLToPath(new URL('../resources/icon.png', import.meta.url)),
       category: 'Development',
-      target: ['AppImage'],
+      target: ['deb', 'AppImage'],
+      // The workspace package name is scoped, and electron-builder derives an executable name
+      // containing "@" and "/" from it, which no Linux file path accepts.
+      executableName: 'deepseek-harness',
+      syncDesktopName: true,
+      maintainer: 'DeepSeek Harness Linux <159547572+rafa3570@users.noreply.github.com>',
+      vendor: 'DeepSeek Harness Linux (unofficial community build)',
+      synopsis: 'Unofficial Linux build of DeepSeek Harness',
+      description: 'DeepSeek Harness desktop application, packaged for Linux by the community. This is not an official DeepSeek release.',
+      desktop: {
+        entry: {
+          Name: 'DeepSeek Harness',
+          GenericName: 'AI coding agent',
+          Comment: 'Unofficial community Linux build of DeepSeek Harness',
+          Categories: 'Development;IDE;',
+          MimeType: 'x-scheme-handler/dsh;',
+        },
+      },
+    },
+    deb: {
+      // Ubuntu 24.04 renamed several GTK/ATK libraries with the time_t transition (t64 suffix),
+      // while Debian 12 and older Ubuntu keep the historical names; alternatives cover both.
+      depends: [
+        'libgtk-3-0t64 | libgtk-3-0',
+        'libnotify4',
+        'libnss3',
+        'libxss1',
+        'libxtst6',
+        'xdg-utils',
+        'libatspi2.0-0t64 | libatspi2.0-0',
+        'libuuid1',
+        'libsecret-1-0',
+      ],
+      recommends: ['libappindicator3-1'],
     },
     nsis: {
       uninstallDisplayName: '${productName}',

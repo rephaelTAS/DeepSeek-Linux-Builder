@@ -37,7 +37,7 @@ export function resolveDesktopBuildTarget(
  * @param environment - Packaging environment with an optional absolute cache directory.
  * @returns Target paths plus shared download and package caches.
  */
-export function desktopTargetBuildPaths(target: DesktopAutoUpdateTarget, environment?: NodeJS.ProcessEnv): DesktopTargetBuildPaths
+export function desktopTargetBuildPaths(target: string, environment?: NodeJS.ProcessEnv): DesktopTargetBuildPaths
 
 /**
  * Return the platform and architecture of the payload one release target prepares.
@@ -45,8 +45,8 @@ export function desktopTargetBuildPaths(target: DesktopAutoUpdateTarget, environ
  * @param target - Supported Desktop target name.
  * @returns Platform and architecture of the prepared payload.
  */
-export function desktopTargetPlatform(target: DesktopAutoUpdateTarget): {
-  readonly platform: 'darwin' | 'win32'
+export function desktopTargetPlatform(target: string): {
+  readonly platform: 'darwin' | 'win32' | 'linux'
   readonly arch: 'arm64' | 'x64'
 }
 
