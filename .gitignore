@@ -58,3 +58,6 @@ linux/.build/
 linux/**/*.deb
 linux/**/*.AppImage
 linux/**/*.AppImage.zsync
+
+# Scratch logs written at the repository root by local tooling.
+/*.log
