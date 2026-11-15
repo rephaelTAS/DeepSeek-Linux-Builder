@@ -5465,8 +5465,8 @@ importers:
         specifier: ^4.4.3
         version: 4.4.3
       simple-icons:
-        specifier: 16.31.0
-        version: 16.31.0
+        specifier: 16.35.0
+        version: 16.35.0
 
   packages/client/ui-reference:
     devDependencies:
@@ -20848,10 +20848,12 @@ packages:
 
   '@modelcontextprotocol/server-everything@2026.8.31':
     resolution: {integrity: sha512-5U3OZh8Xq0Li4nA26l6uNvV9/1suMDuWSn+NjLZIhzinhMY6N3A4DCrxVecBGPf2PsNFKTEv5krxGPRwzxc7jQ==}
+    deprecated: 'Date-based versions are no longer published. This package has resumed semantic versioning at 1.0.0: install the latest version.'
     hasBin: true
 
   '@modelcontextprotocol/server-filesystem@2026.8.31':
     resolution: {integrity: sha512-kKaFkyAh6oipvc9+EAbJ552JafnMnOq5nzmzWkp1jJdBhTAAGpmIpWihUG1+rfNhmEFM98gUZDdCHCDD4v6a7Q==}
+    deprecated: 'Date-based versions are no longer published. This package has resumed semantic versioning at 1.0.0: install the latest version.'
     hasBin: true
 
   '@modelcontextprotocol/server@2.2.0':
@@ -21822,6 +21824,9 @@ packages:
   '@smithy/core@3.35.0':
     resolution: {integrity: sha512-zRMhfkByhT2snNdr1si24vJitU6Cr9ix2MikUfWmkAgp4jrNP0GcKSP5YvwQ+TlI8AZXER5QOGJn3JsVtSD9/A==}
     engines: {node: '>=18.0.0'}
+    deprecated: |-
+      Deprecated due to a bug in custom logger data redaction. Upgrade to the latest version. If you used a custom logger with this
+        version, review your logs and rotate any credentials or other secrets. See https://github.com/aws/aws-sdk-js-v3/issues/8393.
 
   '@smithy/credential-provider-imds@4.5.2':
     resolution: {integrity: sha512-A9uSdn72ozbRUSit0eib0TW7nXuNPlaeM0zcGkJ+nE6tFcSDbnmtwoxbTCFBukVQcszDAyvsd7+rTduPTXpygg==}
@@ -25927,8 +25932,8 @@ packages:
   simple-get@4.0.1:
     resolution: {integrity: sha512-brv7p5WgH0jmQJr1ZDDfKDOSeWWg+OVypG99A/5vYGPqJ6pxiaHLy8nxtFjBA7oMa01ebA9gfh1uMCFqOuXxvA==}
 
-  simple-icons@16.31.0:
-    resolution: {integrity: sha512-dDEqvQrmxL7ZnqQtGHGjCNW6CfiwzAif+83Hol9JXAnAB6wh2zsZD7Sc1kWT0O/RRAKt7xfG8W6UZhYBPD+GAA==}
+  simple-icons@16.35.0:
+    resolution: {integrity: sha512-TCfl/2+GTrx0nCo4pEWGvxhOb8c6NsqOU1OpwjtF4lwJAthB8IYVD0fuIMjLMg6JFuG1YBO0t1iETQqJLqkoJA==}
     engines: {node: '>=0.12.18'}
 
   simple-update-notifier@2.0.0:
@@ -33965,7 +33970,7 @@ snapshots:
       once: 1.4.0
       simple-concat: 1.0.1
 
-  simple-icons@16.31.0: {}
+  simple-icons@16.35.0: {}
 
   simple-update-notifier@2.0.0:
     dependencies:
