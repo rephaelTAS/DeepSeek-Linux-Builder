@@ -90,7 +90,7 @@ jobs:
           dpkg-deb --contents "$deb" | head -n 50
 
       - name: Upload package
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: dsh-linux-deb-x64
           path: apps/desktop/.desktop-build/targets/linux-x64/**/*.deb
